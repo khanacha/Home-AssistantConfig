@@ -1,0 +1,11 @@
+##Views
+plant_lights: 
+#  control: hidden
+  view: yes
+  entities:
+    - group.plants
+##Groups
+plants: 
+#  control: hidden
+  entities:
+    - light.intermatic_ha03wd_lamp_module_level_2

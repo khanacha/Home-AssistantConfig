@@ -1,0 +1,164 @@
+- alias: FrauInOffice
+  trigger:
+    platform: state
+    entity_id: device_tracker.lilly
+    to: 'home'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1
+    data:
+      temperature: 65
+- alias: FrauNotInOffice
+  trigger:
+    platform: state
+    entity_id: device_tracker.lilly
+    to: 'not_home'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1
+    data:
+      temperature: 60
+- alias: MovieTime
+  trigger:
+    platform: state
+    entity_id: device_tracker.lgbigscreen
+    to: 'home'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1
+    data:
+      temperature: 69
+- alias: MovieTimeOver
+  trigger:
+    platform: state
+    entity_id: device_tracker.lgbigscreen
+    to: 'not_home'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1
+    data:
+      temperature: 60
+
+- alias: ton 
+  trigger:
+    platform: state
+    entity_id: device_tracker.tv
+    to: 'home'
+  action:
+    service: scene.turn_on
+    entity_id: scene.lrlow
+   
+- alias: TV_off
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: device_tracker.tv
+    to: not_home
+  action:
+    - service: homeassistant.turn_off
+      entity_id: 
+        - switch.intermatic_ha05c_lamp_screw_in_module_switch
+        - switch.intermatic_unknown_type0001_id0003_switch_2
+    - condition: state
+      entity_id: sun.sun
+      state: below_horizon
+    - service: homeassistant.turn_on
+      entity_id: light.intermatic_ha03wd_lamp_module_level
+
+- alias: cavelight_on
+  trigger:
+    platform: state
+    entity_id: device_tracker.dadpc
+    to: 'home'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch
+    - service: light.turn_on
+      data:
+        entity_id: light.hue_white_lamp_1
+        brightness: 254
+    - service: light.turn_on
+      data:
+        entity_id: light.hue_color_lamp_1
+        brightness: 254
+
+- alias: cavelight_off
+  trigger:
+    platform: state
+    entity_id: device_tracker.dadpc
+    to: not_home
+  action:
+    - service: homeassistant.turn_off
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch
+    - service: light.turn_off
+      data:
+        entity_id: light.hue_white_lamp_1
+    - service: light.turn_off
+      data:
+        entity_id: light.hue_color_lamp_1
+
+- alias: plants_on
+  trigger:
+    platform: time
+    at: '06:00:00'
+  action:
+    service: light.turn_on
+    entity_id: group.plants
+    
+- alias: plants_off
+  trigger:
+    platform: time
+    at: '22:00:00'
+  action:
+    service: light.turn_off
+    entity_id: group.plants
+- alias: bson
+  trigger:
+    platform: state
+    entity_id: device_tracker.lgbigscreen
+    to: 'home'    
+  action:
+    - service: homeassistant.turn_on
+      entity_id: light.intermatic_ha03wd_lamp_module_level_3
+    - service: light.turn_on
+      data:
+        entity_id: light.hue_white_lamp_2
+        brightness: 50
+- alias: bsoff
+  trigger:
+    platform: state
+    entity_id: device_tracker.lgbigscreen
+    to: 'not_home'    
+  action:
+    - service: homeassistant.turn_off
+      entity_id: light.intermatic_ha03wd_lamp_module_level_3
+    - service: light.turn_on
+      data:
+        entity_id: light.hue_white_lamp_2
+        brightness: 254
+#- alias: t1
+#  trigger:
+#    platform: homeassistant
+#    event: start
+#  action:
+#    - service: notify.NOTIFIER_NAME
+#      data:
+#        title: 'Intruder alert'
+#        message: 'Intruder alert at apartment!!'
+#- alias: t2
+#  trigger:
+#    platform: time
+#    minutes: '/5'
+#    seconds: 00
+#  action:
+#    - service: notify.NOTIFIER_NAME
+#      data:
+#        title: 'Intruder alert'
+#        message: 'Intruder alert at apartment!!'
+
+
+
+
+
+
+

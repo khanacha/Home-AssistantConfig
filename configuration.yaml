@@ -1,0 +1,165 @@
+homeassistant:
+  name: Home
+  latitude: !secret lat
+  longitude: !secret long
+  elevation: !secret elevation
+  unit_system: imperial
+  time_zone: !secret ha_time_zone
+  customize:
+    light.intermatic_ha03wd_lamp_module_level_3:
+      friendly_name: LM11
+    light.intermatic_ha03wd_lamp_module_level:
+      friendly_name: LM04
+    switch.intermatic_unknown_type0001_id0003_switch:
+     friendly_name: ampswitch
+    switch.intermatic_ha05c_lamp_screw_in_module_switch:
+      hidden: false
+      friendly_name: TV_lamp
+    device_tracker.tv:
+      friendly_name: tv
+    switch.intermatic_unknown_type0001_id0003_switch_2:
+      friendly_name: TVampswitch
+    climate.linear_gctbz48_battery_powered_zwave_thermostat_cooling_1:
+      hidden: true
+    climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1:
+      friendly_name: MusicRoomHeat
+
+logger:
+  default: error
+#  logs: homeassistant.components.zoneminder: debug
+http:
+  api_password: !secret http_password
+  # base_url: example.duckdns.org:8123
+  trusted_networks:
+    - 10.0.0.0/24
+    - 127.0.0.1
+  ip_ban_enabled: True
+  login_attempts_threshold: 3
+history:
+discovery:
+logbook:
+updater:
+  include_used_components: true
+frontend:
+  javascript_version: latest
+config:
+
+# Weather YWeather
+weather:
+  - platform: yweather
+
+zoneminder:
+  host: 10.0.0.254
+  path: /zm/
+  path_zms: /cgi-bin/nph-zms
+  username: View
+  password: !secret zm_password
+  ssl: False
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+camera:
+  - platform: zoneminder
+
+switch:
+  - platform: zoneminder
+    command_on: Modect
+    command_off: Monitor
+      
+climate:
+  - platform: radiotherm
+    host: 10.0.0.11
+
+device_tracker:
+  - platform: unifi
+    host: 10.0.0.182
+    username: View
+    password: !secret unifi_password
+    detection_time: 30
+#   ssid_filter:
+#      - 'HomeSSID'
+#      - 'IoTSSID'
+#  #- platform: nmap_tracker
+#  #  hosts: 10.0.0.0/24
+#  #  exclude: 10.0.0.4
+#  #  scan_options: " -sn "
+  - platform: ping
+    #track_new_devices: True
+    interval_seconds: 12
+    consider_home: 30
+    hosts:
+      tv:    10.0.0.14  
+#      GoogleHome: 10.0.0.16
+      Mann_GS5: 10.0.0.184
+      Frau_GS5: 10.0.0.173
+      LGBigScreen: 10.0.0.20
+      dadpc: 10.0.0.58
+      lilly: 10.0.0.48  
+
+  - platform: bluetooth_tracker
+  - platform: tomato
+    host: 10.0.0.5
+    username: admin
+    password: !secret tomato_password
+    http_id: TIDbe9d8e88dc346897
+    track_new_devices: yes
+    interval_seconds: 30
+    consider_home: 90
+    consider_away: 90
+
+light:
+  - platform: tplink
+    host: 10.0.0.21
+    name: TP_LB120
+  
+zwave:
+  usb_path: /dev/ttyACM0
+
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+sun:
+
+# Weather prediction
+sensor:
+  - platform: yr
+    name: Weather
+    monitored_conditions:
+      - temperature
+      - dewpointTemperature
+  - platform: zoneminder
+
+sensor 2:
+  platform: command_line
+  name: Dewpoint
+  command: /home/homeassistant/dp.py  
+#  command: /home/homeassistant/gettemp.py
+#  command: digitemp_DS9097U -aq -s /dev/ttyUSB0
+  unit_of_measurement: "°C"
+
+# Text to speech
+tts:
+  - platform: google
+
+hue:
+  bridges:
+    - host: 10.0.0.25
+      allow_unreachable: true
+      allow_hue_groups: true
+  
+notify:
+  - name: NOTIFIER_NAME
+    platform: smtp
+    server: smtp.gmail.com
+    port: 587
+    timeout: 15
+    sender: !secret gmail_sender
+    encryption: starttls
+    username: !secret gmail_username
+    password: !secret gmail_password 
+    recipient:
+      - !secret gmail_recipient
+    sender_name: My Home Assistant
+
+scene: !include scenes.yaml
+group: !include groups.yaml
+automation: !include automations.yaml

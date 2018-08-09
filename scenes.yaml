@@ -1,0 +1,8 @@
+- name: lrlow
+  entities:
+    switch.intermatic_ha05c_lamp_screw_in_module_switch:
+      state: on
+    light.intermatic_ha03wd_lamp_module_level:
+      state: off
+    switch.intermatic_unknown_type0001_id0003_switch_2:
+      state: on
