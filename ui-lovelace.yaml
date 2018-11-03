@@ -11,30 +11,35 @@ views:
     theme: dark-mode
     # The cards to show on this view.
     cards:
-      - type: weather-forecast
+      - id: 8f663e7039e14e39a80036c76e33d6aa  # Automatically created id
+        type: weather-forecast
         entity: weather.yweather
         # The filter card will filter entities for their state
-      - type: entity-filter
+      - id: 13f9942e016d47a8a6db018ef217f7f7  # Automatically created id
+        type: entity-filter
         entities:
           - device_tracker.Mann
           - device_tracker.Frau
         state_filter:
-          - 'home'
+          - home
         card_config:
           type: glance
           title: People that are home
 
         # The picture entity card will represent an entity with a picture
-      - type: picture-entity
+      - id: 76dab747cd5a4ccd8d32685340e293fa  # Automatically created id
+        type: picture-entity
         image: https://www.home-assistant.io/images/default-social.png
-        entity: light.c 
-         
-  - icon: mdi:home-assistant
+        entity: light.c
+
+  - id: 1  # Automatically created id
+    icon: mdi:home-assistant
     # Title of the view. Will be used as the tooltip for tab icon
     title: Second view
     cards:
         # Entities card will take a list of entities and show their state.
-      - type: entities
+      - id: fa93643135a84be8b67c81233fd0072c  # Automatically created id
+        type: entities
         # Title of the entities card
         title: Example
         # The entities here will be shown in the same order as specified.
@@ -47,7 +52,8 @@ views:
             name: Cave light
 
         # The markdown card will render markdown text.
-      - type: markdown
+      - id: de653dcc6b11417f96a8794a570d88a1  # Automatically created id
+        type: markdown
         title: Lovelace
-        content: >
+        content: >-
           Welcome to your **Lovelace UI**.

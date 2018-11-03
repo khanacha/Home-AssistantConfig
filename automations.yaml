@@ -42,7 +42,7 @@
 - alias: ton 
   trigger:
     platform: state
-    entity_id: device_tracker.tv
+    entity_id: device_tracker.chromecast
     to: 'home'
   action:
     service: scene.turn_on
@@ -52,18 +52,12 @@
   initial_state: true
   trigger:
     platform: state
-    entity_id: device_tracker.tv
+    entity_id: device_tracker.chromecast
     to: not_home
   action:
     - service: homeassistant.turn_off
       entity_id: 
         - switch.intermatic_ha05c_lamp_screw_in_module_switch
-        - switch.intermatic_unknown_type0001_id0003_switch_2
-    - condition: state
-      entity_id: sun.sun
-      state: below_horizon
-    - service: homeassistant.turn_on
-      entity_id: light.intermatic_ha03wd_lamp_module_level
 
 - alias: cavelight_on
   trigger:

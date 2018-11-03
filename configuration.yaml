@@ -14,9 +14,9 @@ homeassistant:
      friendly_name: ampswitch
     switch.intermatic_ha05c_lamp_screw_in_module_switch:
       hidden: false
-      friendly_name: TV_lamp
-    device_tracker.tv:
-      friendly_name: tv
+      friendly_name: TVLamp
+    device_tracker.chromecast:
+      friendly_name: Chromecast
     switch.intermatic_unknown_type0001_id0003_switch_2:
       friendly_name: TVampswitch
     climate.linear_gctbz48_battery_powered_zwave_thermostat_cooling_1:
@@ -44,67 +44,67 @@ frontend:
   javascript_version: latest
 config:
 
+wink:
+  
 # Weather YWeather
 weather:
   - platform: yweather
 
-zoneminder:
-  host: 10.0.0.254
-  path: /zm/
-  path_zms: /cgi-bin/nph-zms
-  username: View
-  password: !secret zm_password
-  ssl: False
-ffmpeg:
-  ffmpeg_bin: /usr/bin/ffmpeg
-camera:
-  - platform: zoneminder
+#zoneminder:
+#  host: 10.0.0.254
+#  path: /zm/
+#  path_zms: /cgi-bin/nph-zms
+#  username: View
+#  password: !secret zm_password
+#  ssl: False
+#ffmpeg:
+#  ffmpeg_bin: /usr/bin/ffmpeg
+#camera:
+#  - platform: zoneminder
 
-switch:
-  - platform: zoneminder
-    command_on: Modect
-    command_off: Monitor
+#switch:
+#  - platform: zoneminder
+#    command_on: Modect
+#    command_off: Monitor
       
 climate:
-  - platform: radiotherm
-    host: 10.0.0.11
+  platform: radiotherm
+  host: 
+    -  10.0.0.11
+    -  10.0.0.30
 
 device_tracker:
-  - platform: unifi
-    host: 10.0.0.182
-    username: View
-    password: !secret unifi_password
-    detection_time: 30
-#   ssid_filter:
-#      - 'HomeSSID'
-#      - 'IoTSSID'
-#  #- platform: nmap_tracker
-#  #  hosts: 10.0.0.0/24
-#  #  exclude: 10.0.0.4
-#  #  scan_options: " -sn "
-  - platform: ping
-    #track_new_devices: True
-    interval_seconds: 12
-    consider_home: 30
-    hosts:
-      tv:    10.0.0.14  
-#      GoogleHome: 10.0.0.16
-      Mann_GS5: 10.0.0.184
-      Frau_GS5: 10.0.0.173
-      LGBigScreen: 10.0.0.20
-      dadpc: 10.0.0.58
-      lilly: 10.0.0.48  
-
   - platform: bluetooth_tracker
-  - platform: tomato
-    host: 10.0.0.5
-    username: admin
-    password: !secret tomato_password
-    http_id: TIDbe9d8e88dc346897
+    interval_seconds: 15
+    consider_home: 60
     track_new_devices: yes
-    interval_seconds: 30
-    consider_home: 90
-    consider_away: 90
+    hide_if_away: False 
+  - platform: ping
+    hosts:
+      Chromecast: 10.0.0.15
+      GoogleHome: 10.0.0.16
+      Dcell: 10.0.0.59
+#      Frau_GS5: 10.0.0.173
+#      LGBigScreen: 10.0.0.20
+      dadpc: 10.0.0.58
+#      lilly: 10.0.0.48  
+
+#  - platform: unifi_direct
+#    host: 10.0.0.28
+#    username: admin
+#    password: !secret unifi_password
+#  - platform: tomato
+#    host: 10.0.0.5
+#    username: admin
+#    password: !secret tomato_password
+#    http_id: TIDbe9d8e88dc346897
+#    track_new_devices: yes
+#  - platform: netgear
+#    host: 10.0.0.6
+#    username: admin
+#    password: !secret netgearwgt624_pw
+#    accesspoints:
+#       - fc:c2:de:1e:65:88
 
 light:
   - platform: tplink
@@ -113,7 +113,6 @@ light:
   
 zwave:
   usb_path: /dev/ttyACM0
-
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
@@ -126,7 +125,21 @@ sensor:
     monitored_conditions:
       - temperature
       - dewpointTemperature
-  - platform: zoneminder
+#  - platform: zoneminder
+  - platform: broadlink
+    host: 10.0.0.31
+    mac: '34:ea:34:b2:a7:c4'
+    monitored_conditions:
+      - temperature
+      - humidity
+      - air_quality
+      - light
+      - noise
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /home
+      - type: processor_use  
 
 sensor 2:
   platform: command_line
