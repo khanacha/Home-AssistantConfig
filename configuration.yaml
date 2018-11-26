@@ -5,24 +5,7 @@ homeassistant:
   elevation: !secret elevation
   unit_system: imperial
   time_zone: !secret ha_time_zone
-  customize:
-    light.intermatic_ha03wd_lamp_module_level_3:
-      friendly_name: LM11
-    light.intermatic_ha03wd_lamp_module_level:
-      friendly_name: LM04
-    switch.intermatic_unknown_type0001_id0003_switch:
-     friendly_name: ampswitch
-    switch.intermatic_ha05c_lamp_screw_in_module_switch:
-      hidden: false
-      friendly_name: TVLamp
-    device_tracker.chromecast:
-      friendly_name: Chromecast
-    switch.intermatic_unknown_type0001_id0003_switch_2:
-      friendly_name: TVampswitch
-    climate.linear_gctbz48_battery_powered_zwave_thermostat_cooling_1:
-      hidden: true
-    climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1:
-      friendly_name: MusicRoomHeat
+  customize: !include customize.yaml
 
 logger:
   default: error
@@ -42,6 +25,14 @@ updater:
   include_used_components: true
 frontend:
   javascript_version: latest
+feedreader:
+  urls:
+    - https://www.home-assistant.io/atom.xml
+    - https://hasspodcast.io/feed/podcast
+  scan_interval:
+    minutes: 30
+  max_entries: 1 
+
 config:
 
 wink:
@@ -87,7 +78,7 @@ device_tracker:
 #      Frau_GS5: 10.0.0.173
 #      LGBigScreen: 10.0.0.20
       dadpc: 10.0.0.58
-#      lilly: 10.0.0.48  
+      lilly: 10.0.0.48  
 
 #  - platform: unifi_direct
 #    host: 10.0.0.28
@@ -172,7 +163,11 @@ notify:
     recipient:
       - !secret gmail_recipient
     sender_name: My Home Assistant
-
+upnp:
+  port_mapping: False
+  sensors: False
+  
+script: !include scripts.yaml
 scene: !include scenes.yaml
 group: !include groups.yaml
 automation: !include automations.yaml

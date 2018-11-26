@@ -45,11 +45,14 @@ views:
         # The entities here will be shown in the same order as specified.
         # Each entry is an entity ID or a map with extra options.
         entities:
-          - light.kitchen
-          - switch.ac
+          - entity: zwave.intermatic_ha05c_lamp_screw_in_module_2
+            name: SIL2
+          - entity: light.tp_lb120
           - entity: light.c
             # Override the name to use
             name: Cave light
+          - entity: switch.intermatic_ha05c_lamp_screw_in_module_switch_2
+            name: sil2
 
         # The markdown card will render markdown text.
       - id: de653dcc6b11417f96a8794a570d88a1  # Automatically created id

@@ -1,3 +1,28 @@
+
+- alias: 0test
+  trigger:
+    platform: state
+    entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch_2
+    to: 'on'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: light.tp_lb120
+      brightness: 20
+      color_temp: 150
+
+- alias: Send notification of RSS feed title when updated
+  trigger:
+    platform: event
+    event_type: feedreader
+  action:
+    service: persistent_notification.create
+    data_template:
+      title: "New HA Podcast available"
+      message: "New Podcast available - {{ as_timestamp(now()) | timestamp_custom('%I:%M:%S %p %d%b%Y', true) }}"
+      notification_id: "{{ trigger.event.data.title }}"
+
+      
 - alias: FrauInOffice
   trigger:
     platform: state
@@ -7,7 +32,7 @@
     service: climate.set_temperature
     entity_id: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1
     data:
-      temperature: 65
+      temperature: 67
 - alias: FrauNotInOffice
   trigger:
     platform: state
@@ -42,22 +67,22 @@
 - alias: ton 
   trigger:
     platform: state
-    entity_id: device_tracker.chromecast
-    to: 'home'
+    entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
+    to: 'on'
   action:
-    service: scene.turn_on
-    entity_id: scene.lrlow
+    - service: homeassistant.turn_on
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch_2
    
 - alias: TV_off
   initial_state: true
   trigger:
     platform: state
-    entity_id: device_tracker.chromecast
-    to: not_home
+    entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
+    to: 'off'
   action:
     - service: homeassistant.turn_off
       entity_id: 
-        - switch.intermatic_ha05c_lamp_screw_in_module_switch
+        - switch.intermatic_unknown_type0001_id0003_switch_2
 
 - alias: cavelight_on
   trigger:
@@ -75,6 +100,10 @@
       data:
         entity_id: light.hue_color_lamp_1
         brightness: 254
+#    - service: set_temperature
+#      data:
+#        entity_id: climate.thermostat768a85
+#        temperature: 
 
 - alias: cavelight_off
   trigger:
@@ -106,6 +135,7 @@
   action:
     service: light.turn_off
     entity_id: group.plants
+
 - alias: bson
   trigger:
     platform: state
