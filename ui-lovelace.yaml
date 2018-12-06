@@ -1,22 +1,47 @@
-title: My Awesome Home
-# Exclude entities from "Unused entities" view
-excluded_entities:
+title: Honeylights
 
 views:
-    # View tab title.
-  - title: Example
-    # Optional unique id for direct access /lovelace/${id}
-    id: example
-    # Each view can have a different theme applied.
-    theme: dark-mode
-    # The cards to show on this view.
+  - title: Cameras
+    id: cameras
+    icons: mdi:camera
     cards:
-      - id: 8f663e7039e14e39a80036c76e33d6aa  # Automatically created id
-        type: weather-forecast
+      - type: picture-entity
+        entity: camera.generic_camera
+        name: Driveway
+
+  - title: Heat 
+    id: Heat
+    background: radial-gradient(crimson, skyblue)
+    theme: dark-mode
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: thermostat
+            entity: climate.thermostat768a85
+          - type: thermostat
+            entity: climate.thermostat771026
+          - type: thermostat
+            entity: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1
+            
+  - title: Environment
+    id: Environment
+    icon: mdi:cloud
+    theme: dark-mode
+    cards:
+      - type: weather-forecast
         entity: weather.yweather
-        # The filter card will filter entities for their state
-      - id: 13f9942e016d47a8a6db018ef217f7f7  # Automatically created id
-        type: entity-filter
+      - type: history-graph
+        hours_to_show: 24
+        refresh_interval: 300
+        entities:
+          - sensor.broadlink_sensor_humidity
+          - sensor.broadlink_sensor_temperature  
+      
+  - title: Smartness
+    id: smartness 
+    icon: mdi:home-assistant
+    cards:
+      - type: entity-filter
         entities:
           - device_tracker.Mann
           - device_tracker.Frau
@@ -25,38 +50,26 @@ views:
         card_config:
           type: glance
           title: People that are home
-
-        # The picture entity card will represent an entity with a picture
-      - id: 76dab747cd5a4ccd8d32685340e293fa  # Automatically created id
-        type: picture-entity
-        image: https://www.home-assistant.io/images/default-social.png
-        entity: light.c
-
-  - id: 1  # Automatically created id
-    icon: mdi:home-assistant
-    # Title of the view. Will be used as the tooltip for tab icon
-    title: Second view
-    cards:
-        # Entities card will take a list of entities and show their state.
-      - id: fa93643135a84be8b67c81233fd0072c  # Automatically created id
-        type: entities
-        # Title of the entities card
-        title: Example
-        # The entities here will be shown in the same order as specified.
-        # Each entry is an entity ID or a map with extra options.
+      - type: entities
         entities:
           - entity: zwave.intermatic_ha05c_lamp_screw_in_module_2
             name: SIL2
           - entity: light.tp_lb120
           - entity: light.c
-            # Override the name to use
             name: Cave light
           - entity: switch.intermatic_ha05c_lamp_screw_in_module_switch_2
             name: sil2
+      - type: entity-filter
+        title: What is on?
+        entities:
+          - light.hue_color_lamp_1
+          - light.hue_white_lamp_1
+          - light.hue_white_lamp_2
+          - light.intermatic_ha03wd_lamp_module_level
+          - light.intermatic_ha03wd_lamp_module_level_2
+          - light.intermatic_ha03wd_lamp_module_level_4
+          - light.intermatic_ha03wd_lamp_module_level_5
+        state_filter:
+          - "on"
+  
 
-        # The markdown card will render markdown text.
-      - id: de653dcc6b11417f96a8794a570d88a1  # Automatically created id
-        type: markdown
-        title: Lovelace
-        content: >-
-          Welcome to your **Lovelace UI**.

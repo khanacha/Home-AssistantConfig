@@ -1,15 +1,107 @@
 
-- alias: 0test
+- alias: ton 
   trigger:
     platform: state
-    entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch_2
-    to: 'on'
+    entity_id: device_tracker.chromecastlr
+  action:
+    - service: homeassistant.turn_on
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch_2
+    - service: light.turn_off
+      entity_id: group.plants
+    - service: homeassistant.turn_on
+      entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
+    
+- alias: TV_off
+  trigger:
+    - platform: state
+      entity_id: device_tracker.chromecastlr
+      to: 'not_home'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch_2
+    - service: light.turn_on
+      entity_id: group.plants
+    - service: homeassistant.turn_off
+      entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
+
+- alias: cavelight_on
+  trigger:
+    platform: state
+    entity_id: device_tracker.dadpc
+    to: 'home'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch
+    - service: light.turn_on
+      data:
+        entity_id: light.hue_white_lamp_1
+        brightness: 254
+    - service: light.turn_on
+      data:
+        entity_id: light.hue_color_lamp_1
+        brightness: 254
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.thermostat768a85
+        temperature: 60
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.thermostat771026
+        temperature: 60
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1 
+        temperature: 60
+
+- alias: cavelight_off
+  trigger:
+    platform: state
+    entity_id: device_tracker.dadpc
+    to: not_home
+  action:
+    - service: homeassistant.turn_off
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch
+    - service: light.turn_off
+      data:
+        entity_id: light.hue_white_lamp_1
+    - service: light.turn_off
+      data:
+        entity_id: light.hue_color_lamp_1
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.thermostat768a85
+        temperature: 71
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.thermostat771026
+        temperature: 69
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1 
+        temperature: 69
+
+- alias: N_Hall_light_off
+  initial_state: True
+  hide_entity: False
+  trigger:
+    platform: sun
+    event: sunrise
+  action:
+    service: light.turn_off
+    entity_id: light.tp_lb120
+
+- alias: N_Hall_light_on
+  initial_state: True
+  hide_entity: False
+  trigger:
+    platform: sun
+    event: sunset
   action:
     service: light.turn_on
     data:
       entity_id: light.tp_lb120
-      brightness: 20
-      color_temp: 150
+      brightness: 100
+      color_temp: 6500
 
 - alias: Send notification of RSS feed title when updated
   trigger:
@@ -64,61 +156,6 @@
     data:
       temperature: 60
 
-- alias: ton 
-  trigger:
-    platform: state
-    entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
-    to: 'on'
-  action:
-    - service: homeassistant.turn_on
-      entity_id: switch.intermatic_unknown_type0001_id0003_switch_2
-   
-- alias: TV_off
-  initial_state: true
-  trigger:
-    platform: state
-    entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
-    to: 'off'
-  action:
-    - service: homeassistant.turn_off
-      entity_id: 
-        - switch.intermatic_unknown_type0001_id0003_switch_2
-
-- alias: cavelight_on
-  trigger:
-    platform: state
-    entity_id: device_tracker.dadpc
-    to: 'home'
-  action:
-    - service: homeassistant.turn_on
-      entity_id: switch.intermatic_unknown_type0001_id0003_switch
-    - service: light.turn_on
-      data:
-        entity_id: light.hue_white_lamp_1
-        brightness: 254
-    - service: light.turn_on
-      data:
-        entity_id: light.hue_color_lamp_1
-        brightness: 254
-#    - service: set_temperature
-#      data:
-#        entity_id: climate.thermostat768a85
-#        temperature: 
-
-- alias: cavelight_off
-  trigger:
-    platform: state
-    entity_id: device_tracker.dadpc
-    to: not_home
-  action:
-    - service: homeassistant.turn_off
-      entity_id: switch.intermatic_unknown_type0001_id0003_switch
-    - service: light.turn_off
-      data:
-        entity_id: light.hue_white_lamp_1
-    - service: light.turn_off
-      data:
-        entity_id: light.hue_color_lamp_1
 
 - alias: plants_on
   trigger:

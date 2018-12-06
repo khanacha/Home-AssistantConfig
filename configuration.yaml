@@ -28,7 +28,7 @@ frontend:
 feedreader:
   urls:
     - https://www.home-assistant.io/atom.xml
-    - https://hasspodcast.io/feed/podcast
+    - https://www.hasspodcast.io/feed/podcast
   scan_interval:
     minutes: 30
   max_entries: 1 
@@ -37,9 +37,12 @@ config:
 
 wink:
   
-# Weather YWeather
 weather:
   - platform: yweather
+
+camera:
+  - platform: generic
+    still_image_url: http://10.0.0.202/snap.jpeg
 
 #zoneminder:
 #  host: 10.0.0.254
@@ -74,6 +77,7 @@ device_tracker:
     hosts:
       Chromecast: 10.0.0.15
       GoogleHome: 10.0.0.16
+      ChromecastLR: 10.0.0.34
       Dcell: 10.0.0.59
 #      Frau_GS5: 10.0.0.173
 #      LGBigScreen: 10.0.0.20

@@ -9,3 +9,5 @@ plants:
 #  control: hidden
   entities:
     - light.intermatic_ha03wd_lamp_module_level_2
+    - light.intermatic_ha03wd_lamp_module_level_4
+    - light.intermatic_ha03wd_lamp_module_level_5
