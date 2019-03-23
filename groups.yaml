@@ -1,4 +1,9 @@
 ##Views
+all_lights:
+  view: yes
+  entities:
+    - group.all_lights
+
 plant_lights: 
 #  control: hidden
   view: yes
@@ -11,3 +16,14 @@ plants:
     - light.intermatic_ha03wd_lamp_module_level_2
     - light.intermatic_ha03wd_lamp_module_level_4
     - light.intermatic_ha03wd_lamp_module_level_5
+    - switch.sonoff3light
+    - switch.sonoff2light
+    - switch.sonoff5light
+
+cave_lights:
+  view: yes
+  entities:
+    - light.intermatic_ha03wd_lamp_module_level
+    - light.hue_white_lamp_2
+#    - light.tp_lb120
+     

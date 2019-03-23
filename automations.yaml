@@ -1,4 +1,82 @@
 
+- alias: bthfnOn
+  trigger:
+    - platform: state
+      entity_id: light.hue_white_lamp_1 
+      to: "on"
+    - platform: state
+      entity_id: light.hue_color_lamp_1
+      to: "on"  
+  action:
+    - service: homeassistant.turn_on
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch_3
+    - service: timer.start
+      data:
+        entity_id: timer.bath
+
+- alias: bthfnOff
+  trigger:
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.bath 
+  action:
+    - service: homeassistant.turn_off
+      entity_id: switch.intermatic_unknown_type0001_id0003_switch_3
+    - service: homeassistant.turn_off
+      entity_id: light.hue_white_lamp_1
+    - service: homeassistant.turn_off
+      entity_id: light.hue_color_lamp_1
+
+- alias: xmasslightson
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "+01:00:00"
+  action:
+    service: homeassistant.turn_on
+    entity_id: switch.tplink88
+
+- alias: xmasslightsoff
+  trigger:
+    platform: time
+    at: '23:00:00'
+  action:
+    service: homeassistant.turn_off
+    entity_id: switch.tplink88
+
+- alias: phonelampoff
+  trigger:
+    platform: sun
+    event: sunrise
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.hue_white_lamp_3
+
+- alias: phonelampon
+  trigger:
+    platform: sun
+    event: sunset
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.hue_white_lamp_3
+
+#- alias: sdhw_on
+#  trigger: 
+#    platform: time
+#    at: '10:00:00'
+#  action:
+#    - service: homeassistant.turn_on
+#      entity_id: switch.tplink63
+
+#- alias: sdhw_off
+#  trigger: 
+#    platform: time
+#    at: '14:00:00'
+#  action:
+#    - service: homeassistant.turn_off
+#      entity_id: switch.tplink63
+
 - alias: ton 
   trigger:
     platform: state
@@ -6,7 +84,7 @@
   action:
     - service: homeassistant.turn_on
       entity_id: switch.intermatic_unknown_type0001_id0003_switch_2
-    - service: light.turn_off
+    - service: homeassistant.turn_off
       entity_id: group.plants
     - service: homeassistant.turn_on
       entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
@@ -19,8 +97,10 @@
   action:
     - service: homeassistant.turn_off
       entity_id: switch.intermatic_unknown_type0001_id0003_switch_2
-    - service: light.turn_on
+    - delay: 0.01
+    - service: homeassistant.turn_on
       entity_id: group.plants
+    - delay: 0.01
     - service: homeassistant.turn_off
       entity_id: switch.intermatic_ha05c_lamp_screw_in_module_switch
 
@@ -162,7 +242,7 @@
     platform: time
     at: '06:00:00'
   action:
-    service: light.turn_on
+    service: homeassistant.turn_on
     entity_id: group.plants
     
 - alias: plants_off
@@ -170,7 +250,7 @@
     platform: time
     at: '22:00:00'
   action:
-    service: light.turn_off
+    service: homeassistant.turn_off
     entity_id: group.plants
 
 - alias: bson

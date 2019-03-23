@@ -25,54 +25,35 @@ updater:
   include_used_components: true
 frontend:
   javascript_version: latest
+  themes: !include themes.yaml
 feedreader:
   urls:
     - https://www.home-assistant.io/atom.xml
     - https://www.hasspodcast.io/feed/podcast
   scan_interval:
-    minutes: 30
+    minutes: 300
   max_entries: 1 
 
 config:
 
-wink:
-  
-weather:
-  - platform: yweather
-
 camera:
   - platform: generic
     still_image_url: http://10.0.0.202/snap.jpeg
-
-#zoneminder:
-#  host: 10.0.0.254
-#  path: /zm/
-#  path_zms: /cgi-bin/nph-zms
-#  username: View
-#  password: !secret zm_password
-#  ssl: False
-#ffmpeg:
-#  ffmpeg_bin: /usr/bin/ffmpeg
-#camera:
-#  - platform: zoneminder
-
-#switch:
-#  - platform: zoneminder
-#    command_on: Modect
-#    command_off: Monitor
-      
+     
 climate:
   platform: radiotherm
   host: 
     -  10.0.0.11
     -  10.0.0.30
 
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
 device_tracker:
   - platform: bluetooth_tracker
     interval_seconds: 15
     consider_home: 60
     track_new_devices: yes
-    hide_if_away: False 
   - platform: ping
     hosts:
       Chromecast: 10.0.0.15
@@ -101,59 +82,41 @@ device_tracker:
 #    accesspoints:
 #       - fc:c2:de:1e:65:88
 
-light:
-  - platform: tplink
-    host: 10.0.0.21
-    name: TP_LB120
-  
-zwave:
-  usb_path: /dev/ttyACM0
-
-# Allows you to issue voice commands from the frontend in enabled browsers
-conversation:
-sun:
-
-# Weather prediction
-sensor:
-  - platform: yr
-    name: Weather
-    monitored_conditions:
-      - temperature
-      - dewpointTemperature
-#  - platform: zoneminder
-  - platform: broadlink
-    host: 10.0.0.31
-    mac: '34:ea:34:b2:a7:c4'
-    monitored_conditions:
-      - temperature
-      - humidity
-      - air_quality
-      - light
-      - noise
-  - platform: systemmonitor
-    resources:
-      - type: disk_use_percent
-        arg: /home
-      - type: processor_use  
-
-sensor 2:
-  platform: command_line
-  name: Dewpoint
-  command: /home/homeassistant/dp.py  
-#  command: /home/homeassistant/gettemp.py
-#  command: digitemp_DS9097U -aq -s /dev/ttyUSB0
-  unit_of_measurement: "°C"
-
-# Text to speech
-tts:
-  - platform: google
-
 hue:
   bridges:
     - host: 10.0.0.25
       allow_unreachable: true
       allow_hue_groups: true
-  
+
+intent_script:      
+
+light:
+  - platform: tplink
+    host: 10.0.0.21
+    name: TP_LB120
+
+lovelace:
+#  mode: yaml
+
+mqtt:
+  broker: 10.0.0.8
+  port: 1883
+  client_id: home-assistant-1
+  keepalive: 60
+  username: !secret mqtt_user
+  password: !secret mqtt_password
+  protocol: 3.1
+  birth_message:
+    topic: "tele/hass1/LWT"
+    payload: "Online"
+    qos: 1
+    retain: true
+  will_message:
+    topic: "tele/hass1/LWT"
+    payload: "Offline"
+    qos: 1
+    retain: false
+
 notify:
   - name: NOTIFIER_NAME
     platform: smtp
@@ -167,10 +130,189 @@ notify:
     recipient:
       - !secret gmail_recipient
     sender_name: My Home Assistant
+
+person:
+
+sun:
+
+# Weather prediction
+sensor:
+  - platform: yr
+    name: Weather
+    forecast: 24
+    monitored_conditions:
+      - symbol
+      - temperature
+      - dewpointTemperature
+      - precipitation
+      - windSpeed
+  - platform: broadlink
+    host: 10.0.0.31
+    mac: '34:ea:34:b2:a7:c4'
+    monitored_conditions:
+      - temperature
+      - humidity
+      - air_quality
+      - light
+      - noise
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /home
+      - type: processor_use 
+  - platform: mqtt
+    name: "Sonoffth16_1Temp"
+    state_topic: "home/Sonoffth16_1Temp/SENSOR"
+    value_template: "{{ value_json['AM2301'].Temperature }}"
+    unit_of_measurement: "°C"
+  - platform: mqtt
+    name: "Sonoffth16_1Humidity"
+    device_class: "humidity"
+    state_topic: "home/Sonoffth16_1Temp/SENSOR"
+    value_template: "{{ value_json['AM2301'].Humidity }}"
+    unit_of_measurement: "%"
+  - platform: mqtt
+    name: "Sonoffth16_2Temp"
+    state_topic: "home/Sonoffth16_2/SENSOR"
+    value_template: "{{ value_json['AM2301'].Temperature }}"
+    unit_of_measurement: "°C"
+  - platform: mqtt
+    name: "Sonoffth16_1Humidity"
+    device_class: "humidity"
+    state_topic: "home/Sonoffth16_2/SENSOR"
+    value_template: "{{ value_json['AM2301'].Humidity }}"
+    unit_of_measurement: "%"
+
+
+#sensor 2:
+#  platform: command_line
+#  name: Dewpoint
+#  command: /home/homeassistant/dp.py  
+#  command: /home/homeassistant/gettemp.py
+#  command: digitemp_DS9097U -aq -s /dev/ttyUSB0
+#  unit_of_measurement: "°C"
+
+
+switch:
+  - platform: mqtt
+    name: "Sonoff1Light"
+    state_topic:   "home/Sonoff1Light/stat/POWER"
+    command_topic: "home/Sonoff1Light/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false
+  - platform: mqtt
+    name: "Sonoff2Light"
+    state_topic:   "home/Sonoff2Light/stat/POWER"
+    command_topic: "home/Sonoff2Light/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false
+  - platform: mqtt
+    name: "Sonoff3Light"
+    state_topic:   "home/Sonoff3Light/stat/POWER"
+    command_topic: "home/Sonoff3Light/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false  
+  - platform: mqtt
+    name: "Sonoff4Light"
+    state_topic:   "home/Sonoff4Light/stat/POWER"
+    command_topic: "home/Sonoff4Light/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false   
+  - platform: mqtt
+    name: "Sonoff5Light"
+    state_topic:   "home/Sonoff5Light/stat/POWER"
+    command_topic: "home/Sonoff5Light/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false   
+  - platform: mqtt
+    name: "Sonoff6Light"
+    state_topic:   "home/Sonoff6Light/stat/POWER"
+    command_topic: "home/Sonoff6Light/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false  
+  - platform: mqtt
+    name: "Sonoffth16_1Temp"
+    state_topic:   "home/Sonoffth16_1Temp/stat/POWER"
+    command_topic: "home/Sonoffth16_1Temp/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false 
+  - platform: mqtt
+    name: "Sonoffth16_2"
+    state_topic:   "home/Sonoffth16_2/stat/POWER"
+    command_topic: "home/Sonoffth16_2/cmnd/POWER"
+    qos: 0
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    retain: false 
+  - platform: tplink
+    host: 10.0.0.35
+    name: TPLink63
+  - platform: tplink
+    host: 10.0.0.36
+    name: TPLink88
+
+system_health:
+
+timer:
+  bath:
+    duration: '00:30:00'
+
+# Text to speech
+#tts:
+#  - platform: google
+
 upnp:
   port_mapping: False
   sensors: False
-  
+
+weather:
+  - platform: darksky
+    api_key: 5385d432f872c5d8dc7f2c698243e45e
+
+wink:
+
+zwave:
+  usb_path: /dev/ttyACM0
+
+#zoneminder:
+#  host: 10.0.0.254
+#  path: /zm/
+#  path_zms: /cgi-bin/nph-zms
+#  username: View
+#  password: !secret zm_password
+#  ssl: False
+#ffmpeg:
+#  ffmpeg_bin: /usr/bin/ffmpeg
+#camera:
+#  - platform: zoneminder
+#  - platform: zoneminder
+#    command_on: Modect
+#    command_off: Monitor
+
+
+ 
 script: !include scripts.yaml
 scene: !include scenes.yaml
 group: !include groups.yaml

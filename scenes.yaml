@@ -3,3 +3,4 @@
 # TVLamp    
     switch.intermatic_ha05c_lamp_screw_in_module_switch:
       state: on
+

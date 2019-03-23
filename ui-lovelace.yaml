@@ -1,6 +1,20 @@
 title: Honeylights
 
 views:
+  - title: HVAC
+    id: HVAC
+    icons: mdi:fan
+    cards:
+      - type: entities
+        entities:
+          - entity: light.hue_color_lamp_1
+            name: Upper_Bathroom_light
+          - entity: light.hue_white_lamp_1
+            name: Lower_Bathroom_Light
+          - entity: switch.intermatic_unknown_type0001_id0003_switch_3
+#          zwave.intermatic_unknown_type0001_id0003_3
+            name: HRV_Switch
+          
   - title: Cameras
     id: cameras
     icons: mdi:camera
@@ -23,6 +37,27 @@ views:
           - type: thermostat
             entity: climate.linear_gctbz48_battery_powered_zwave_thermostat_heating_1
             
+  - title: Switches
+    id: Switches
+    icon: mdi:white-balance-incandescent
+    theme: happy
+    cards:
+      - type: entity-button
+        name: tplink63 switch on
+        icon: mdi:white-balance-incandescent
+        tap_action: toggle
+        entity: switch.tplink63
+      - type: entity-button
+        name: Dad in Office
+        tap_action: call-service
+        entity: script.dadofficein
+        service: script.turn_on
+      - type: entity-button
+        name: Dad out of Office
+        tap_action: call-service
+        entity: script.dadofficeout
+        service: script.turn_on  
+
   - title: Environment
     id: Environment
     icon: mdi:cloud
